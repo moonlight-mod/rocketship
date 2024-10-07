@@ -140,8 +140,8 @@ cp "$discord_dir/$discord_exe_kebab.desktop" "$applications_dir"
 sed -i "s|/usr/share/$discord_exe_kebab|$discord_dir|" "$applications_dir/$discord_exe_kebab.desktop"
 
 mkdir -p $icons_dir
-cp "$discord_dir/discord.png" "$icons_dir"
-sed -i "s|Icon=discord|Icon=$icons_dir/discord.png|" "$applications_dir/$discord_exe_kebab.desktop"
+cp "$discord_dir/discord.png" "$icons_dir/$discord_exe_kebab.png"
+sed -i "s|Icon=$discord_exe_kebab|Icon=$icons_dir/$discord_exe_kebab.png|" "$applications_dir/$discord_exe_kebab.desktop"
 
 echo "Cleaning up..."
 rm -rf $work_dir
