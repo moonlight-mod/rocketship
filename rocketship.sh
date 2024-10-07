@@ -119,11 +119,11 @@ wget -O "$work_dir/electron.tar.gz" "$electron_url"
 mkdir -p "$work_dir/electron"
 tar -xf "$work_dir/electron.tar.gz" -C "$work_dir/electron"
 
-echo "Downloading venmic..."
-wget -O "$discord_dir/venmic.node" "$venmic_url"
-
 echo "Installing modified Electron..."
 mv "$work_dir/electron" "$discord_dir"
+
+echo "Downloading venmic..."
+wget -O "$discord_dir/venmic.node" "$venmic_url"
 
 echo "Installing Discord..."
 cp "$discord_extracted_dir/$discord_exe_kebab.desktop" "$discord_dir"
