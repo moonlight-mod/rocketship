@@ -68,7 +68,8 @@ done
 
 download_url="https://discordapp.com/api/download/$discord_branch?platform=linux&format=tar.gz"
 electron_url="https://github.com/moonlight-mod/discord-electron/releases/latest/download/electron.tar.gz"
-venmic_url="https://raw.githubusercontent.com/moonlight-mod/rocketship/main/venmic.node"
+venmic_url="https://registry.npmjs.org/@vencord/venmic/-/venmic-6.1.0.tgz"
+venmic_sum="a9722c27fc2d2025b2819dd51912de61a8933de0"
 
 work_dir="/tmp/moonlight-rocketship"
 # TODO we should use XDG environment variables
@@ -128,7 +129,19 @@ echo "Installing modified Electron..."
 mv "$work_dir/electron" "$discord_dir"
 
 echo "Downloading venmic..."
-wget -O "$discord_dir/venmic.node" "$venmic_url"
+venmic_tar_path="$work_dir/venmic.tar.gz"
+venmic_target_path="$discord_dir/venmic.node"
+wget -O "$venmic_tar_path" "$venmic_url"
+venmic_upstream_sum=$(shasum "$venmic_tar_path" | awk '{ print $1; }')
+if [ "$venmic_upstream_sum" != "$venmic_sum" ]; then
+  echo "venmic node sum does not match upstream sum. Exiting."
+  echo "upstream: $venmic_upstream_sum"
+  echo "wanted: $venmic_sum"
+  exit 1
+fi
+mkdir "$work_dir/venmic"
+tar xf "$venmic_tar_path" -C "$work_dir/venmic"
+mv "$work_dir/venmic/package/prebuilds/venmic-addon-linux-x64/node-napi-v7.node" "$venmic_target_path"
 
 echo "Installing Discord..."
 cp "$discord_extracted_dir/$discord_exe_kebab.desktop" "$discord_dir"
