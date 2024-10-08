@@ -1,7 +1,7 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # rocketship.sh v1.0.0 https://github.com/moonlight-mod/rocketship
 
-set -e
+set -eu
 
 discord_branch="stable"
 discord_exe="Discord"
@@ -10,12 +10,14 @@ discord_exe_kebab="discord"
 force_yes=false
 
 print_usage() {
+  set +x
   echo "rocketship.sh v1.0.0 https://github.com/moonlight-mod/rocketship"
   echo "Usage: $0 [options]"
   echo "Options:"
   echo "  -b, --branch <branch>  The branch of Discord to install (stable, ptb, canary)"
   echo "  -y, --yes              Automatically answer yes to all prompts"
   echo "  -h, --help             Display this help message"
+  set -x
 }
 
 set_branch() {
@@ -69,16 +71,19 @@ electron_url="https://github.com/moonlight-mod/discord-electron/releases/latest/
 venmic_url="https://raw.githubusercontent.com/moonlight-mod/rocketship/main/venmic.node"
 
 work_dir="/tmp/moonlight-rocketship"
+# TODO we should use XDG environment variables
 discord_dir="$HOME/.local/share/$discord_exe"
 applications_dir="$HOME/.local/share/applications"
 icons_dir="$HOME/.local/share/icons/hicolor/256x256"
 
+set +x
 echo "rocketship will do the following:"
 echo "- Download Discord from $download_url"
 echo "- Download modified Electron from $electron_url"
 echo "- Download venmic from $venmic_url"
 echo "- Install Discord to $discord_dir"
 echo "- Add a desktop entry and icon"
+set -x
 if [ $force_yes = false ]; then
   read -p "Do you want to continue? (y/n) " -n 1 -r
   echo
@@ -89,7 +94,7 @@ if [ $force_yes = false ]; then
 fi
 
 if [ -d $work_dir ]; then
-  echo "Cleaning up previous run of rocketship..."
+  echo "Cleaning up previous run of rocketship in $work_dir..."
   rm -rf $work_dir
 fi
 mkdir -p $work_dir
@@ -104,7 +109,7 @@ if [ -d $discord_dir ]; then
     fi
   fi
 
-  echo "Deleting existing Discord installation..."
+  echo "Deleting existing Discord installation in $discord_dir..."
   rm -rf $discord_dir
 fi
 
@@ -143,7 +148,7 @@ mkdir -p $icons_dir
 cp "$discord_dir/discord.png" "$icons_dir/$discord_exe_kebab.png"
 sed -i "s|Icon=$discord_exe_kebab|Icon=$icons_dir/$discord_exe_kebab.png|" "$applications_dir/$discord_exe_kebab.desktop"
 
-echo "Cleaning up..."
+echo "Cleaning up $work_dir..."
 rm -rf $work_dir
 
-echo "Done!"
+echo "Done! Run $discord_exe in $discord_dir to start Discord directly."
