@@ -69,7 +69,7 @@ done
 download_url="https://discordapp.com/api/download/$discord_branch?platform=linux&format=tar.gz"
 electron_url="https://github.com/moonlight-mod/discord-electron/releases/latest/download/electron.tar.gz"
 venmic_url="https://registry.npmjs.org/@vencord/venmic/-/venmic-6.1.0.tgz"
-venmic_sum="a9722c27fc2d2025b2819dd51912de61a8933de0"
+venmic_sum="7d8694997ff2eeffe1dea6205df1af56df8f2d2656d9ba966bc884b23cb08c1f"
 
 work_dir="/tmp/moonlight-rocketship"
 # TODO we should use XDG environment variables
@@ -132,7 +132,7 @@ echo "Downloading venmic..."
 venmic_tar_path="$work_dir/venmic.tar.gz"
 venmic_target_path="$discord_dir/venmic.node"
 wget -O "$venmic_tar_path" "$venmic_url"
-venmic_upstream_sum=$(shasum "$venmic_tar_path" | awk '{ print $1; }')
+venmic_upstream_sum=$(sha256sum "$venmic_tar_path" | awk '{ print $1; }')
 if [ "$venmic_upstream_sum" != "$venmic_sum" ]; then
   echo "venmic node sum does not match upstream sum. Exiting."
   echo "upstream: $venmic_upstream_sum"
